@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0b8a45">
-
 <title>Golf Swing AI</title>
 
 <style>
@@ -34,317 +33,321 @@ button{
   min-height:100vh;
   margin:0 auto;
   background:#fff;
-  padding-bottom:84px;
+  padding-bottom:82px;
   overflow:hidden;
 }
 
-/* =========================
-   HERO
-========================= */
+/* ===== HERO ===== */
 
 .hero{
   position:relative;
-  min-height:680px;
+  height:720px;
+  min-height:720px;
   background-image:
     linear-gradient(
       to bottom,
-      rgba(255,255,255,.15) 0%,
-      rgba(255,255,255,.18) 28%,
-      rgba(255,255,255,.10) 55%,
-      rgba(0,70,30,.12) 100%
+      rgba(255,255,255,.16) 0%,
+      rgba(255,255,255,.14) 28%,
+      rgba(255,255,255,.03) 58%,
+      rgba(0,0,0,.04) 100%
     ),
     url("369F6371-339B-47A3-B083-0620A213595D.png");
 
   background-size:cover;
   background-position:center center;
-  display:flex;
-  flex-direction:column;
-}
-
-.hero::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(
-    to bottom,
-    rgba(255,255,255,.22) 0%,
-    rgba(255,255,255,.05) 38%,
-    rgba(0,0,0,.05) 100%
-  );
-  pointer-events:none;
 }
 
 .hero-top{
   position:relative;
-  z-index:2;
+  z-index:5;
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding:18px 20px 0;
 }
 
-.icon-button{
-  width:42px;
-  height:42px;
+.top-btn{
+  width:36px;
+  height:36px;
   border:none;
-  border-radius:50%;
-  background:rgba(255,255,255,.88);
+  background:transparent;
+  padding:0;
   display:grid;
   place-items:center;
-  font-size:20px;
-  box-shadow:0 4px 12px rgba(0,0,0,.12);
+  color:#0c3e28;
 }
+
+.menu-icon{
+  width:26px;
+  height:18px;
+  position:relative;
+}
+
+.menu-icon span{
+  position:absolute;
+  left:0;
+  width:100%;
+  height:2px;
+  background:#123f2b;
+  border-radius:10px;
+}
+
+.menu-icon span:nth-child(1){ top:0; }
+.menu-icon span:nth-child(2){ top:8px; }
+.menu-icon span:nth-child(3){ top:16px; }
+
+.bell{
+  width:22px;
+  height:24px;
+  position:relative;
+}
+
+.bell:before{
+  content:"";
+  position:absolute;
+  left:4px;
+  top:2px;
+  width:14px;
+  height:15px;
+  border:2px solid #123f2b;
+  border-radius:9px 9px 5px 5px;
+}
+
+.bell:after{
+  content:"";
+  position:absolute;
+  left:9px;
+  bottom:0;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:#123f2b;
+}
+
+/* ===== LOGO ===== */
 
 .hero-content{
   position:relative;
-  z-index:2;
+  z-index:4;
   text-align:center;
-  padding:36px 24px 0;
+  padding:18px 20px 0;
 }
 
-.logo-icon{
-  font-size:46px;
-  line-height:1;
-  margin-bottom:8px;
+.logo-mark{
+  width:70px;
+  height:70px;
+  margin:0 auto 4px;
+}
+
+.logo-mark svg{
+  width:100%;
+  height:100%;
+  display:block;
 }
 
 .logo-title{
   margin:0;
-  color:#08743d;
+  color:#0a713c;
   font-family:Georgia,"Times New Roman",serif;
   font-style:italic;
-  font-size:clamp(42px,11vw,58px);
+  font-size:clamp(40px,10vw,54px);
   line-height:1;
   letter-spacing:-2px;
   text-shadow:
-    0 2px 8px rgba(255,255,255,.9),
-    0 1px 2px rgba(0,0,0,.05);
+    0 2px 8px rgba(255,255,255,.95),
+    0 0 2px rgba(255,255,255,.95);
 }
 
 .logo-sub{
-  margin-top:10px;
-  color:#0c7d45;
+  margin-top:7px;
+  color:#0b7a43;
   font-weight:800;
-  font-size:17px;
+  font-size:16px;
 }
 
 .catch{
-  margin:28px auto 0;
+  margin:22px auto 0;
   max-width:340px;
-  font-size:17px;
-  line-height:1.8;
+  font-size:16px;
+  line-height:1.75;
   font-weight:700;
   text-shadow:
-    0 2px 9px rgba(255,255,255,.95),
-    0 0 3px rgba(255,255,255,.95);
+    0 2px 10px rgba(255,255,255,.98),
+    0 0 3px rgba(255,255,255,.98);
 }
 
-.hero-spacer{
-  flex:1;
-}
+/* ===== BUTTONS ===== */
 
 .hero-actions{
-  position:relative;
-  z-index:2;
-  padding:0 22px 26px;
+  position:absolute;
+  left:20px;
+  right:20px;
+  bottom:22px;
+  z-index:5;
 }
 
 .main-btn{
   width:100%;
-  min-height:62px;
+  min-height:58px;
   border:none;
   border-radius:999px;
+  font-size:17px;
   font-weight:800;
-  font-size:18px;
-  margin-top:13px;
-  box-shadow:0 8px 24px rgba(0,0,0,.16);
+  margin-top:12px;
+  box-shadow:0 7px 22px rgba(0,0,0,.16);
   cursor:pointer;
 }
 
 .main-btn.primary{
-  background:linear-gradient(135deg,#0da555,#078443);
+  background:linear-gradient(135deg,#0ca653,#07833f);
   color:#fff;
 }
 
 .main-btn.secondary{
-  background:rgba(255,255,255,.95);
-  color:#18221b;
+  background:rgba(255,255,255,.97);
+  color:#162119;
 }
 
-.main-btn span{
+.btn-icon{
   margin-right:8px;
 }
 
-/* =========================
-   INFO STRIP
-========================= */
+/* ===== FEATURES ===== */
 
-.info-strip{
+.features{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   background:#fff;
-  border-bottom:1px solid #e4e9e5;
+  border-bottom:1px solid #e3e9e4;
 }
 
-.info-item{
+.feature{
+  padding:18px 7px 16px;
   text-align:center;
-  padding:20px 8px 18px;
-  font-size:12px;
+  font-size:11px;
   line-height:1.45;
   font-weight:700;
   border-right:1px solid #edf0ed;
 }
 
-.info-item:last-child{
+.feature:last-child{
   border-right:none;
 }
 
-.info-icon{
-  font-size:24px;
-  margin-bottom:7px;
+.feature-icon{
+  display:block;
+  font-size:22px;
+  margin-bottom:6px;
 }
 
-/* =========================
-   RECENT
-========================= */
+/* ===== RECENT ===== */
 
 .section{
-  padding:22px 18px 28px;
+  padding:20px 16px 26px;
 }
 
 .section-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:15px;
+  margin-bottom:13px;
 }
 
 .section-title{
   margin:0;
-  font-size:20px;
+  font-size:18px;
 }
 
-.link{
-  color:#0b8747;
-  font-size:13px;
+.more{
+  color:#0a8547;
+  font-size:12px;
   font-weight:700;
 }
 
 .swing-list{
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:10px;
 }
 
 .swing-card{
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:12px;
-  border-radius:18px;
-  background:#f7faf7;
+  gap:10px;
+  padding:10px;
+  border-radius:15px;
+  background:#f8faf8;
   border:1px solid #e5ebe6;
 }
 
 .thumb{
-  width:78px;
-  height:64px;
-  border-radius:12px;
+  width:72px;
+  height:58px;
+  border-radius:10px;
   background-image:url("369F6371-339B-47A3-B083-0620A213595D.png");
   background-size:cover;
   background-position:center;
-  flex-shrink:0;
   position:relative;
   overflow:hidden;
+  flex-shrink:0;
 }
 
-.thumb::after{
-  content:"🏌️‍♂️";
+.thumb:after{
+  content:"";
   position:absolute;
   inset:0;
-  display:grid;
-  place-items:center;
-  font-size:26px;
-  background:rgba(255,255,255,.04);
+  background:linear-gradient(to bottom,transparent,rgba(0,0,0,.06));
 }
 
 .swing-meta{
-  min-width:0;
   flex:1;
+  min-width:0;
 }
 
 .swing-date{
-  font-size:12px;
-  color:#6f7972;
-  margin-bottom:4px;
+  color:#707973;
+  font-size:11px;
+  margin-bottom:3px;
 }
 
 .swing-name{
-  font-size:15px;
+  font-size:14px;
   font-weight:800;
 }
 
 .score{
   color:#0a8243;
-  font-size:24px;
+  font-size:22px;
   font-weight:900;
   white-space:nowrap;
 }
 
 .score small{
-  font-size:12px;
-  margin-left:2px;
+  font-size:11px;
 }
 
 .arrow{
-  color:#a0aaa2;
-  margin-left:3px;
+  color:#a3aba5;
 }
 
-/* =========================
-   START PANEL
-========================= */
-
-.start-panel{
-  margin-top:18px;
-  padding:20px;
-  border-radius:20px;
-  background:linear-gradient(135deg,#f4fbf6,#eef7ef);
-  border:1px solid #dfeadf;
-}
-
-.start-title{
-  font-weight:900;
-  margin-bottom:5px;
-}
-
-.start-text{
-  margin:0;
-  color:#68736b;
-  line-height:1.65;
-  font-size:13px;
-}
-
-/* =========================
-   BOTTOM NAV
-========================= */
+/* ===== BOTTOM NAV ===== */
 
 .bottom-nav{
   position:fixed;
-  z-index:20;
-  bottom:0;
+  z-index:30;
   left:50%;
+  bottom:0;
   transform:translateX(-50%);
   width:100%;
   max-width:520px;
   display:grid;
   grid-template-columns:repeat(4,1fr);
   background:rgba(255,255,255,.97);
+  backdrop-filter:blur(14px);
   border-top:1px solid #dde4df;
-  backdrop-filter:blur(16px);
   padding:
-    8px 4px
-    calc(8px + env(safe-area-inset-bottom));
+    7px 4px
+    calc(7px + env(safe-area-inset-bottom));
 }
 
 .nav-item{
@@ -355,18 +358,17 @@ button{
 
 .nav-icon{
   display:block;
-  font-size:23px;
-  margin-bottom:3px;
+  font-size:22px;
+  line-height:1;
+  margin-bottom:4px;
 }
 
 .nav-item.active{
-  color:#0a8747;
+  color:#0a8647;
   font-weight:800;
 }
 
-/* =========================
-   FILE INPUT
-========================= */
+/* ===== INPUT ===== */
 
 .file-input{
   display:none;
@@ -396,22 +398,32 @@ button{
   transform:translate(-50%,0);
 }
 
-/* =========================
-   TABLET / PC
-========================= */
-
-@media(min-width:600px){
-  body{
-    padding:20px 0;
+@media(max-height:750px){
+  .hero{
+    height:650px;
+    min-height:650px;
   }
 
-  .app{
-    border-radius:30px;
-    box-shadow:0 20px 60px rgba(0,0,0,.14);
+  .hero-content{
+    padding-top:10px;
   }
 
-  .bottom-nav{
-    border-radius:0 0 30px 30px;
+  .logo-mark{
+    width:58px;
+    height:58px;
+  }
+
+  .logo-title{
+    font-size:40px;
+  }
+
+  .catch{
+    margin-top:16px;
+    font-size:15px;
+  }
+
+  .main-btn{
+    min-height:54px;
   }
 }
 </style>
@@ -424,15 +436,75 @@ button{
   <section class="hero">
 
     <div class="hero-top">
-      <button class="icon-button">☰</button>
-      <button class="icon-button">🔔</button>
+
+      <button class="top-btn" aria-label="メニュー">
+        <div class="menu-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </button>
+
+      <button class="top-btn" aria-label="通知">
+        <div class="bell"></div>
+      </button>
+
     </div>
+
 
     <div class="hero-content">
 
-      <div class="logo-icon">🏌️‍♂️</div>
+      <div class="logo-mark">
 
-      <h1 class="logo-title">Golf Swing AI</h1>
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+
+          <circle cx="53" cy="21" r="7" fill="#0a713c"/>
+
+          <path
+            d="M49 28
+               C44 34 43 42 45 50
+               L50 62
+               L44 82
+               L52 84
+               L59 64
+               L67 81
+               L75 77
+               L63 56
+               L61 43
+               L73 50
+               L78 45
+               L62 33
+               C58 29 54 27 49 28Z"
+            fill="#0a713c"/>
+
+          <path
+            d="M45 35
+               L28 26
+               L25 31
+               L44 44Z"
+            fill="#0a713c"/>
+
+          <path
+            d="M27 27
+               L71 18"
+            stroke="#0a713c"
+            stroke-width="4"
+            stroke-linecap="round"/>
+
+          <path
+            d="M71 18
+               L84 13"
+            stroke="#0a713c"
+            stroke-width="4"
+            stroke-linecap="round"/>
+
+        </svg>
+
+      </div>
+
+      <h1 class="logo-title">
+        Golf Swing AI
+      </h1>
 
       <div class="logo-sub">
         ゴルフスイングAI
@@ -445,17 +517,22 @@ button{
 
     </div>
 
-    <div class="hero-spacer"></div>
 
     <div class="hero-actions">
 
-      <button class="main-btn primary" onclick="openCamera()">
-        <span>📷</span>
+      <button
+        class="main-btn primary"
+        onclick="openCamera()"
+      >
+        <span class="btn-icon">📷</span>
         スイングを撮影する
       </button>
 
-      <button class="main-btn secondary" onclick="openVideo()">
-        <span>🖼️</span>
+      <button
+        class="main-btn secondary"
+        onclick="openVideo()"
+      >
+        <span class="btn-icon">🖼️</span>
         動画から診断する
       </button>
 
@@ -464,22 +541,22 @@ button{
   </section>
 
 
-  <section class="info-strip">
+  <section class="features">
 
-    <div class="info-item">
-      <div class="info-icon">🧠</div>
+    <div class="feature">
+      <span class="feature-icon">🧠</span>
       AIによる<br>
       スイング解析
     </div>
 
-    <div class="info-item">
-      <div class="info-icon">📊</div>
+    <div class="feature">
+      <span class="feature-icon">📊</span>
       わかりやすい<br>
       数値と評価
     </div>
 
-    <div class="info-item">
-      <div class="info-icon">📋</div>
+    <div class="feature">
+      <span class="feature-icon">📋</span>
       上達に役立つ<br>
       アドバイス
     </div>
@@ -490,9 +567,17 @@ button{
   <section class="section">
 
     <div class="section-head">
-      <h2 class="section-title">最近のスイング</h2>
-      <div class="link">すべて見る ›</div>
+
+      <h2 class="section-title">
+        最近のスイング
+      </h2>
+
+      <div class="more">
+        すべて見る ›
+      </div>
+
     </div>
+
 
     <div class="swing-list">
 
@@ -501,15 +586,22 @@ button{
         <div class="thumb"></div>
 
         <div class="swing-meta">
-          <div class="swing-date">2026/08/22 13:30</div>
-          <div class="swing-name">ドライバー</div>
+          <div class="swing-date">
+            2026/08/22 13:30
+          </div>
+
+          <div class="swing-name">
+            ドライバー
+          </div>
         </div>
 
         <div class="score">
           78<small>点</small>
         </div>
 
-        <div class="arrow">›</div>
+        <div class="arrow">
+          ›
+        </div>
 
       </div>
 
@@ -519,31 +611,24 @@ button{
         <div class="thumb"></div>
 
         <div class="swing-meta">
-          <div class="swing-date">2026/08/20 10:15</div>
-          <div class="swing-name">アイアン</div>
+          <div class="swing-date">
+            2026/08/20 10:15
+          </div>
+
+          <div class="swing-name">
+            アイアン
+          </div>
         </div>
 
         <div class="score">
           82<small>点</small>
         </div>
 
-        <div class="arrow">›</div>
+        <div class="arrow">
+          ›
+        </div>
 
       </div>
-
-    </div>
-
-
-    <div class="start-panel">
-
-      <div class="start-title">
-        AIスイング診断を始めよう
-      </div>
-
-      <p class="start-text">
-        スイングを撮影するか、保存済みの動画を選択してください。
-        次のステップでスロー再生・骨格表示・関節角度の分析へ進みます。
-      </p>
 
     </div>
 
