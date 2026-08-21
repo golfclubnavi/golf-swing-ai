@@ -3,365 +3,415 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#078b45">
+<meta name="theme-color" content="#0b8a45">
 
-<title>Golf Swing AI｜AIゴルフスイング診断</title>
+<title>Golf Swing AI</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{
+  box-sizing:border-box;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
-               "Hiragino Sans", "Yu Gothic", sans-serif;
-  background: #f4f7f3;
-  color: #172019;
+html,body{
+  margin:0;
+  padding:0;
+  background:#eef4ef;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+  color:#142019;
 }
 
-button {
-  font: inherit;
+body{
+  min-height:100vh;
 }
 
-.app {
-  width: 100%;
-  max-width: 520px;
-  min-height: 100vh;
-  margin: 0 auto;
-  background: white;
-  padding-bottom: 90px;
+button{
+  font:inherit;
 }
 
-/* ===== HERO ===== */
+.app{
+  width:100%;
+  max-width:520px;
+  min-height:100vh;
+  margin:0 auto;
+  background:#fff;
+  padding-bottom:84px;
+  overflow:hidden;
+}
 
-.hero {
-  position: relative;
-  min-height: 620px;
-  overflow: hidden;
+/* =========================
+   HERO
+========================= */
 
-  background:
+.hero{
+  position:relative;
+  min-height:680px;
+  background-image:
     linear-gradient(
       to bottom,
-      rgba(255,255,255,.05) 0%,
-      rgba(255,255,255,.12) 40%,
-      rgba(0,60,25,.18) 100%
+      rgba(255,255,255,.15) 0%,
+      rgba(255,255,255,.18) 28%,
+      rgba(255,255,255,.10) 55%,
+      rgba(0,70,30,.12) 100%
     ),
-    linear-gradient(
-      180deg,
-      #77c9ff 0%,
-      #dff5ff 35%,
-      #78c96b 70%,
-      #3b9d48 100%
-    );
+    url("369F6371-339B-47A3-B083-0620A213595D.png");
+
+  background-size:cover;
+  background-position:center center;
+  display:flex;
+  flex-direction:column;
 }
 
-/* 青空 */
-.sky {
-  position: absolute;
-  inset: 0 0 45% 0;
-  background:
-    radial-gradient(
-      ellipse at 65% 28%,
-      rgba(255,255,255,.95) 0 8%,
-      transparent 9%
-    ),
-    radial-gradient(
-      ellipse at 78% 24%,
-      rgba(255,255,255,.8) 0 6%,
-      transparent 7%
-    ),
-    linear-gradient(#67c4ff, #e8f8ff);
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.22) 0%,
+    rgba(255,255,255,.05) 38%,
+    rgba(0,0,0,.05) 100%
+  );
+  pointer-events:none;
 }
 
-/* ゴルフ場 */
-.course {
-  position: absolute;
-  left: -10%;
-  right: -10%;
-  bottom: 0;
-  height: 58%;
-  border-radius: 50% 50% 0 0 / 18% 18% 0 0;
-
-  background:
-    radial-gradient(
-      ellipse at 35% 50%,
-      #d9e7c4 0 6%,
-      transparent 6.5%
-    ),
-    radial-gradient(
-      ellipse at 72% 64%,
-      #e7e1c9 0 7%,
-      transparent 7.5%
-    ),
-    linear-gradient(
-      145deg,
-      #62bb5e,
-      #84cf6e 45%,
-      #25883d
-    );
+.hero-top{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 20px 0;
 }
 
-/* 遠くの木 */
-.trees {
-  position: absolute;
-  bottom: 41%;
-  width: 100%;
-  height: 75px;
-
-  background:
-    radial-gradient(circle at 5% 70%, #176633 0 20px, transparent 21px),
-    radial-gradient(circle at 15% 55%, #28773b 0 28px, transparent 29px),
-    radial-gradient(circle at 27% 70%, #176633 0 22px, transparent 23px),
-    radial-gradient(circle at 42% 55%, #28773b 0 30px, transparent 31px),
-    radial-gradient(circle at 58% 70%, #176633 0 24px, transparent 25px),
-    radial-gradient(circle at 73% 55%, #28773b 0 29px, transparent 30px),
-    radial-gradient(circle at 88% 65%, #176633 0 26px, transparent 27px);
+.icon-button{
+  width:42px;
+  height:42px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.88);
+  display:grid;
+  place-items:center;
+  font-size:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
 }
 
-.hero-content {
-  position: relative;
-  z-index: 5;
-  padding: 52px 22px 28px;
-  text-align: center;
+.hero-content{
+  position:relative;
+  z-index:2;
+  text-align:center;
+  padding:36px 24px 0;
 }
 
-.swing-icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 4px;
-  display: grid;
-  place-items: center;
-  font-size: 42px;
+.logo-icon{
+  font-size:46px;
+  line-height:1;
+  margin-bottom:8px;
 }
 
-h1 {
-  margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
-  font-style: italic;
-  font-size: clamp(40px, 11vw, 58px);
-  color: #087239;
-  letter-spacing: -2px;
-  text-shadow: 0 2px 12px rgba(255,255,255,.55);
+.logo-title{
+  margin:0;
+  color:#08743d;
+  font-family:Georgia,"Times New Roman",serif;
+  font-style:italic;
+  font-size:clamp(42px,11vw,58px);
+  line-height:1;
+  letter-spacing:-2px;
+  text-shadow:
+    0 2px 8px rgba(255,255,255,.9),
+    0 1px 2px rgba(0,0,0,.05);
 }
 
-.subtitle {
-  margin-top: 5px;
-  color: #087239;
-  font-size: 17px;
-  font-weight: 700;
+.logo-sub{
+  margin-top:10px;
+  color:#0c7d45;
+  font-weight:800;
+  font-size:17px;
 }
 
-.catch {
-  max-width: 370px;
-  margin: 25px auto 0;
-  font-size: 16px;
-  line-height: 1.8;
-  font-weight: 600;
-  text-shadow: 0 1px 8px white;
+.catch{
+  margin:28px auto 0;
+  max-width:340px;
+  font-size:17px;
+  line-height:1.8;
+  font-weight:700;
+  text-shadow:
+    0 2px 9px rgba(255,255,255,.95),
+    0 0 3px rgba(255,255,255,.95);
 }
 
-.actions {
-  position: absolute;
-  z-index: 6;
-  left: 20px;
-  right: 20px;
-  bottom: 38px;
+.hero-spacer{
+  flex:1;
 }
 
-.main-button {
-  width: 100%;
-  border: none;
-  border-radius: 999px;
-  min-height: 62px;
-  padding: 15px 20px;
-  margin-top: 13px;
-  font-size: 18px;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 7px 22px rgba(0,0,0,.14);
+.hero-actions{
+  position:relative;
+  z-index:2;
+  padding:0 22px 26px;
 }
 
-.camera-button {
-  color: white;
-  background: linear-gradient(135deg, #0ba652, #067a3b);
+.main-btn{
+  width:100%;
+  min-height:62px;
+  border:none;
+  border-radius:999px;
+  font-weight:800;
+  font-size:18px;
+  margin-top:13px;
+  box-shadow:0 8px 24px rgba(0,0,0,.16);
+  cursor:pointer;
 }
 
-.video-button {
-  color: #172019;
-  background: rgba(255,255,255,.96);
+.main-btn.primary{
+  background:linear-gradient(135deg,#0da555,#078443);
+  color:#fff;
 }
 
-.button-icon {
-  margin-right: 8px;
+.main-btn.secondary{
+  background:rgba(255,255,255,.95);
+  color:#18221b;
 }
 
-/* ===== 特徴 ===== */
-
-.features {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: #e7eee8;
-  border-bottom: 1px solid #e2e8e3;
+.main-btn span{
+  margin-right:8px;
 }
 
-.feature {
-  background: white;
-  text-align: center;
-  padding: 22px 8px;
-  font-size: 12px;
-  line-height: 1.5;
-  font-weight: 700;
+/* =========================
+   INFO STRIP
+========================= */
+
+.info-strip{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  background:#fff;
+  border-bottom:1px solid #e4e9e5;
 }
 
-.feature-icon {
-  font-size: 25px;
-  display: block;
-  margin-bottom: 8px;
+.info-item{
+  text-align:center;
+  padding:20px 8px 18px;
+  font-size:12px;
+  line-height:1.45;
+  font-weight:700;
+  border-right:1px solid #edf0ed;
 }
 
-/* ===== 最近のスイング ===== */
-
-.section {
-  padding: 22px 18px;
+.info-item:last-child{
+  border-right:none;
 }
 
-.section-title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.info-icon{
+  font-size:24px;
+  margin-bottom:7px;
 }
 
-.section h2 {
-  margin: 0;
-  font-size: 19px;
+/* =========================
+   RECENT
+========================= */
+
+.section{
+  padding:22px 18px 28px;
 }
 
-.more {
-  color: #07833e;
-  font-size: 13px;
-  font-weight: 700;
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
 }
 
-.empty-history {
-  margin-top: 15px;
-  padding: 25px 15px;
-  border-radius: 18px;
-  background: #f5f8f5;
-  text-align: center;
+.section-title{
+  margin:0;
+  font-size:20px;
 }
 
-.empty-icon {
-  font-size: 34px;
-  margin-bottom: 7px;
+.link{
+  color:#0b8747;
+  font-size:13px;
+  font-weight:700;
 }
 
-.empty-history strong {
-  display: block;
-  margin-bottom: 6px;
+.swing-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
 
-.empty-history p {
-  margin: 0;
-  color: #6c756e;
-  font-size: 13px;
-  line-height: 1.6;
+.swing-card{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  border-radius:18px;
+  background:#f7faf7;
+  border:1px solid #e5ebe6;
 }
 
-/* ===== ボトムナビ ===== */
+.thumb{
+  width:78px;
+  height:64px;
+  border-radius:12px;
+  background-image:url("369F6371-339B-47A3-B083-0620A213595D.png");
+  background-size:cover;
+  background-position:center;
+  flex-shrink:0;
+  position:relative;
+  overflow:hidden;
+}
 
-.bottom-nav {
-  position: fixed;
-  z-index: 30;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+.thumb::after{
+  content:"🏌️‍♂️";
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  font-size:26px;
+  background:rgba(255,255,255,.04);
+}
 
-  width: 100%;
-  max-width: 520px;
+.swing-meta{
+  min-width:0;
+  flex:1;
+}
 
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+.swing-date{
+  font-size:12px;
+  color:#6f7972;
+  margin-bottom:4px;
+}
 
-  background: rgba(255,255,255,.96);
-  backdrop-filter: blur(15px);
+.swing-name{
+  font-size:15px;
+  font-weight:800;
+}
 
-  border-top: 1px solid #dde4de;
+.score{
+  color:#0a8243;
+  font-size:24px;
+  font-weight:900;
+  white-space:nowrap;
+}
 
+.score small{
+  font-size:12px;
+  margin-left:2px;
+}
+
+.arrow{
+  color:#a0aaa2;
+  margin-left:3px;
+}
+
+/* =========================
+   START PANEL
+========================= */
+
+.start-panel{
+  margin-top:18px;
+  padding:20px;
+  border-radius:20px;
+  background:linear-gradient(135deg,#f4fbf6,#eef7ef);
+  border:1px solid #dfeadf;
+}
+
+.start-title{
+  font-weight:900;
+  margin-bottom:5px;
+}
+
+.start-text{
+  margin:0;
+  color:#68736b;
+  line-height:1.65;
+  font-size:13px;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav{
+  position:fixed;
+  z-index:20;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:520px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:rgba(255,255,255,.97);
+  border-top:1px solid #dde4df;
+  backdrop-filter:blur(16px);
   padding:
-    9px 5px
-    calc(9px + env(safe-area-inset-bottom));
+    8px 4px
+    calc(8px + env(safe-area-inset-bottom));
 }
 
-.nav-item {
-  text-align: center;
-  color: #818982;
-  font-size: 10px;
+.nav-item{
+  text-align:center;
+  color:#929a94;
+  font-size:10px;
 }
 
-.nav-item span {
-  display: block;
-  font-size: 23px;
-  margin-bottom: 2px;
+.nav-icon{
+  display:block;
+  font-size:23px;
+  margin-bottom:3px;
 }
 
-.nav-item.active {
-  color: #07833e;
-  font-weight: 800;
+.nav-item.active{
+  color:#0a8747;
+  font-weight:800;
 }
 
-/* ===== 動画入力 ===== */
+/* =========================
+   FILE INPUT
+========================= */
 
-.file-input {
-  display: none;
+.file-input{
+  display:none;
 }
 
-/* ===== 簡易メッセージ ===== */
-
-.toast {
-  position: fixed;
-  z-index: 50;
-  left: 50%;
-  bottom: 100px;
-  transform: translate(-50%, 20px);
-
-  width: calc(100% - 40px);
-  max-width: 450px;
-
-  background: rgba(20,30,22,.94);
-  color: white;
-
-  padding: 14px 18px;
-  border-radius: 14px;
-
-  text-align: center;
-  font-size: 14px;
-
-  opacity: 0;
-  pointer-events: none;
-  transition: .25s;
+.toast{
+  position:fixed;
+  z-index:50;
+  left:50%;
+  bottom:100px;
+  transform:translate(-50%,20px);
+  width:calc(100% - 40px);
+  max-width:450px;
+  background:rgba(19,29,21,.95);
+  color:#fff;
+  padding:14px 18px;
+  border-radius:14px;
+  text-align:center;
+  font-size:14px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
 }
 
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
 }
 
-@media (min-width: 600px) {
-  body {
-    padding: 20px 0;
+/* =========================
+   TABLET / PC
+========================= */
+
+@media(min-width:600px){
+  body{
+    padding:20px 0;
   }
 
-  .app {
-    border-radius: 28px;
-    overflow: hidden;
-    box-shadow: 0 15px 50px rgba(0,0,0,.13);
+  .app{
+    border-radius:30px;
+    box-shadow:0 20px 60px rgba(0,0,0,.14);
   }
 
-  .bottom-nav {
-    border-radius: 0 0 28px 28px;
+  .bottom-nav{
+    border-radius:0 0 30px 30px;
   }
 }
 </style>
@@ -373,17 +423,18 @@ h1 {
 
   <section class="hero">
 
-    <div class="sky"></div>
-    <div class="trees"></div>
-    <div class="course"></div>
+    <div class="hero-top">
+      <button class="icon-button">☰</button>
+      <button class="icon-button">🔔</button>
+    </div>
 
     <div class="hero-content">
 
-      <div class="swing-icon">🏌️‍♂️</div>
+      <div class="logo-icon">🏌️‍♂️</div>
 
-      <h1>Golf Swing AI</h1>
+      <h1 class="logo-title">Golf Swing AI</h1>
 
-      <div class="subtitle">
+      <div class="logo-sub">
         ゴルフスイングAI
       </div>
 
@@ -394,21 +445,17 @@ h1 {
 
     </div>
 
-    <div class="actions">
+    <div class="hero-spacer"></div>
 
-      <button
-        class="main-button camera-button"
-        onclick="openCamera()"
-      >
-        <span class="button-icon">📷</span>
+    <div class="hero-actions">
+
+      <button class="main-btn primary" onclick="openCamera()">
+        <span>📷</span>
         スイングを撮影する
       </button>
 
-      <button
-        class="main-button video-button"
-        onclick="openVideo()"
-      >
-        <span class="button-icon">🖼️</span>
+      <button class="main-btn secondary" onclick="openVideo()">
+        <span>🖼️</span>
         動画から診断する
       </button>
 
@@ -417,22 +464,22 @@ h1 {
   </section>
 
 
-  <section class="features">
+  <section class="info-strip">
 
-    <div class="feature">
-      <span class="feature-icon">🧠</span>
+    <div class="info-item">
+      <div class="info-icon">🧠</div>
       AIによる<br>
       スイング解析
     </div>
 
-    <div class="feature">
-      <span class="feature-icon">📊</span>
+    <div class="info-item">
+      <div class="info-icon">📊</div>
       わかりやすい<br>
       数値と評価
     </div>
 
-    <div class="feature">
-      <span class="feature-icon">📋</span>
+    <div class="info-item">
+      <div class="info-icon">📋</div>
       上達に役立つ<br>
       アドバイス
     </div>
@@ -442,27 +489,60 @@ h1 {
 
   <section class="section">
 
-    <div class="section-title-row">
+    <div class="section-head">
+      <h2 class="section-title">最近のスイング</h2>
+      <div class="link">すべて見る ›</div>
+    </div>
 
-      <h2>最近のスイング</h2>
+    <div class="swing-list">
 
-      <div class="more">
-        すべて見る ›
+      <div class="swing-card">
+
+        <div class="thumb"></div>
+
+        <div class="swing-meta">
+          <div class="swing-date">2026/08/22 13:30</div>
+          <div class="swing-name">ドライバー</div>
+        </div>
+
+        <div class="score">
+          78<small>点</small>
+        </div>
+
+        <div class="arrow">›</div>
+
+      </div>
+
+
+      <div class="swing-card">
+
+        <div class="thumb"></div>
+
+        <div class="swing-meta">
+          <div class="swing-date">2026/08/20 10:15</div>
+          <div class="swing-name">アイアン</div>
+        </div>
+
+        <div class="score">
+          82<small>点</small>
+        </div>
+
+        <div class="arrow">›</div>
+
       </div>
 
     </div>
 
-    <div class="empty-history">
 
-      <div class="empty-icon">🏌️</div>
+    <div class="start-panel">
 
-      <strong>
-        まだ診断履歴がありません
-      </strong>
+      <div class="start-title">
+        AIスイング診断を始めよう
+      </div>
 
-      <p>
-        スイングを撮影するか、動画を選択して<br>
-        最初のAI診断を始めましょう。
+      <p class="start-text">
+        スイングを撮影するか、保存済みの動画を選択してください。
+        次のステップでスロー再生・骨格表示・関節角度の分析へ進みます。
       </p>
 
     </div>
@@ -491,33 +571,29 @@ h1 {
 <nav class="bottom-nav">
 
   <div class="nav-item active">
-    <span>⌂</span>
+    <span class="nav-icon">⌂</span>
     ホーム
   </div>
 
   <div class="nav-item">
-    <span>▤</span>
+    <span class="nav-icon">▤</span>
     診断履歴
   </div>
 
   <div class="nav-item">
-    <span>♡</span>
+    <span class="nav-icon">♡</span>
     レッスン
   </div>
 
   <div class="nav-item">
-    <span>♙</span>
+    <span class="nav-icon">♙</span>
     マイページ
   </div>
 
 </nav>
 
 
-<div
-  id="toast"
-  class="toast"
->
-</div>
+<div id="toast" class="toast"></div>
 
 
 <script>
@@ -532,40 +608,31 @@ const toast =
   document.getElementById("toast");
 
 
-function openCamera() {
-
+function openCamera(){
   cameraInput.click();
-
 }
 
-
-function openVideo() {
-
+function openVideo(){
   videoInput.click();
-
 }
 
-
-function showToast(message) {
+function showToast(message){
 
   toast.textContent = message;
-
   toast.classList.add("show");
 
   setTimeout(() => {
-
     toast.classList.remove("show");
-
-  }, 2500);
+  }, 2400);
 
 }
 
 
 cameraInput.addEventListener(
   "change",
-  function () {
+  function(){
 
-    if (this.files.length > 0) {
+    if(this.files.length > 0){
 
       showToast(
         "撮影した動画を読み込みました！"
@@ -579,9 +646,9 @@ cameraInput.addEventListener(
 
 videoInput.addEventListener(
   "change",
-  function () {
+  function(){
 
-    if (this.files.length > 0) {
+    if(this.files.length > 0){
 
       showToast(
         "動画を読み込みました！"
