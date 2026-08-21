@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#078b45">
+
+<title>Golf Swing AI｜AIゴルフスイング診断</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+               "Hiragino Sans", "Yu Gothic", sans-serif;
+  background: #f4f7f3;
+  color: #172019;
+}
+
+button {
+  font: inherit;
+}
+
+.app {
+  width: 100%;
+  max-width: 520px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: white;
+  padding-bottom: 90px;
+}
+
+/* ===== HERO ===== */
+
+.hero {
+  position: relative;
+  min-height: 620px;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,.05) 0%,
+      rgba(255,255,255,.12) 40%,
+      rgba(0,60,25,.18) 100%
+    ),
+    linear-gradient(
+      180deg,
+      #77c9ff 0%,
+      #dff5ff 35%,
+      #78c96b 70%,
+      #3b9d48 100%
+    );
+}
+
+/* 青空 */
+.sky {
+  position: absolute;
+  inset: 0 0 45% 0;
+  background:
+    radial-gradient(
+      ellipse at 65% 28%,
+      rgba(255,255,255,.95) 0 8%,
+      transparent 9%
+    ),
+    radial-gradient(
+      ellipse at 78% 24%,
+      rgba(255,255,255,.8) 0 6%,
+      transparent 7%
+    ),
+    linear-gradient(#67c4ff, #e8f8ff);
+}
+
+/* ゴルフ場 */
+.course {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: 0;
+  height: 58%;
+  border-radius: 50% 50% 0 0 / 18% 18% 0 0;
+
+  background:
+    radial-gradient(
+      ellipse at 35% 50%,
+      #d9e7c4 0 6%,
+      transparent 6.5%
+    ),
+    radial-gradient(
+      ellipse at 72% 64%,
+      #e7e1c9 0 7%,
+      transparent 7.5%
+    ),
+    linear-gradient(
+      145deg,
+      #62bb5e,
+      #84cf6e 45%,
+      #25883d
+    );
+}
+
+/* 遠くの木 */
+.trees {
+  position: absolute;
+  bottom: 41%;
+  width: 100%;
+  height: 75px;
+
+  background:
+    radial-gradient(circle at 5% 70%, #176633 0 20px, transparent 21px),
+    radial-gradient(circle at 15% 55%, #28773b 0 28px, transparent 29px),
+    radial-gradient(circle at 27% 70%, #176633 0 22px, transparent 23px),
+    radial-gradient(circle at 42% 55%, #28773b 0 30px, transparent 31px),
+    radial-gradient(circle at 58% 70%, #176633 0 24px, transparent 25px),
+    radial-gradient(circle at 73% 55%, #28773b 0 29px, transparent 30px),
+    radial-gradient(circle at 88% 65%, #176633 0 26px, transparent 27px);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+  padding: 52px 22px 28px;
+  text-align: center;
+}
+
+.swing-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 4px;
+  display: grid;
+  place-items: center;
+  font-size: 42px;
+}
+
+h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: clamp(40px, 11vw, 58px);
+  color: #087239;
+  letter-spacing: -2px;
+  text-shadow: 0 2px 12px rgba(255,255,255,.55);
+}
+
+.subtitle {
+  margin-top: 5px;
+  color: #087239;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.catch {
+  max-width: 370px;
+  margin: 25px auto 0;
+  font-size: 16px;
+  line-height: 1.8;
+  font-weight: 600;
+  text-shadow: 0 1px 8px white;
+}
+
+.actions {
+  position: absolute;
+  z-index: 6;
+  left: 20px;
+  right: 20px;
+  bottom: 38px;
+}
+
+.main-button {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  min-height: 62px;
+  padding: 15px 20px;
+  margin-top: 13px;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 7px 22px rgba(0,0,0,.14);
+}
+
+.camera-button {
+  color: white;
+  background: linear-gradient(135deg, #0ba652, #067a3b);
+}
+
+.video-button {
+  color: #172019;
+  background: rgba(255,255,255,.96);
+}
+
+.button-icon {
+  margin-right: 8px;
+}
+
+/* ===== 特徴 ===== */
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: #e7eee8;
+  border-bottom: 1px solid #e2e8e3;
+}
+
+.feature {
+  background: white;
+  text-align: center;
+  padding: 22px 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.feature-icon {
+  font-size: 25px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ===== 最近のスイング ===== */
+
+.section {
+  padding: 22px 18px;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.more {
+  color: #07833e;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.empty-history {
+  margin-top: 15px;
+  padding: 25px 15px;
+  border-radius: 18px;
+  background: #f5f8f5;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 34px;
+  margin-bottom: 7px;
+}
+
+.empty-history strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.empty-history p {
+  margin: 0;
+  color: #6c756e;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ===== ボトムナビ ===== */
+
+.bottom-nav {
+  position: fixed;
+  z-index: 30;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 100%;
+  max-width: 520px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(15px);
+
+  border-top: 1px solid #dde4de;
+
+  padding:
+    9px 5px
+    calc(9px + env(safe-area-inset-bottom));
+}
+
+.nav-item {
+  text-align: center;
+  color: #818982;
+  font-size: 10px;
+}
+
+.nav-item span {
+  display: block;
+  font-size: 23px;
+  margin-bottom: 2px;
+}
+
+.nav-item.active {
+  color: #07833e;
+  font-weight: 800;
+}
+
+/* ===== 動画入力 ===== */
+
+.file-input {
+  display: none;
+}
+
+/* ===== 簡易メッセージ ===== */
+
+.toast {
+  position: fixed;
+  z-index: 50;
+  left: 50%;
+  bottom: 100px;
+  transform: translate(-50%, 20px);
+
+  width: calc(100% - 40px);
+  max-width: 450px;
+
+  background: rgba(20,30,22,.94);
+  color: white;
+
+  padding: 14px 18px;
+  border-radius: 14px;
+
+  text-align: center;
+  font-size: 14px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: .25s;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (min-width: 600px) {
+  body {
+    padding: 20px 0;
+  }
+
+  .app {
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0,0,0,.13);
+  }
+
+  .bottom-nav {
+    border-radius: 0 0 28px 28px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <section class="hero">
+
+    <div class="sky"></div>
+    <div class="trees"></div>
+    <div class="course"></div>
+
+    <div class="hero-content">
+
+      <div class="swing-icon">🏌️‍♂️</div>
+
+      <h1>Golf Swing AI</h1>
+
+      <div class="subtitle">
+        ゴルフスイングAI
+      </div>
+
+      <div class="catch">
+        AIが、あなたのスイングを見える化。<br>
+        上達への最短ルートをサポートします。
+      </div>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="main-button camera-button"
+        onclick="openCamera()"
+      >
+        <span class="button-icon">📷</span>
+        スイングを撮影する
+      </button>
+
+      <button
+        class="main-button video-button"
+        onclick="openVideo()"
+      >
+        <span class="button-icon">🖼️</span>
+        動画から診断する
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <section class="features">
+
+    <div class="feature">
+      <span class="feature-icon">🧠</span>
+      AIによる<br>
+      スイング解析
+    </div>
+
+    <div class="feature">
+      <span class="feature-icon">📊</span>
+      わかりやすい<br>
+      数値と評価
+    </div>
+
+    <div class="feature">
+      <span class="feature-icon">📋</span>
+      上達に役立つ<br>
+      アドバイス
+    </div>
+
+  </section>
+
+
+  <section class="section">
+
+    <div class="section-title-row">
+
+      <h2>最近のスイング</h2>
+
+      <div class="more">
+        すべて見る ›
+      </div>
+
+    </div>
+
+    <div class="empty-history">
+
+      <div class="empty-icon">🏌️</div>
+
+      <strong>
+        まだ診断履歴がありません
+      </strong>
+
+      <p>
+        スイングを撮影するか、動画を選択して<br>
+        最初のAI診断を始めましょう。
+      </p>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+<input
+  id="cameraInput"
+  class="file-input"
+  type="file"
+  accept="video/*"
+  capture="environment"
+/>
+
+<input
+  id="videoInput"
+  class="file-input"
+  type="file"
+  accept="video/*"
+/>
+
+
+<nav class="bottom-nav">
+
+  <div class="nav-item active">
+    <span>⌂</span>
+    ホーム
+  </div>
+
+  <div class="nav-item">
+    <span>▤</span>
+    診断履歴
+  </div>
+
+  <div class="nav-item">
+    <span>♡</span>
+    レッスン
+  </div>
+
+  <div class="nav-item">
+    <span>♙</span>
+    マイページ
+  </div>
+
+</nav>
+
+
+<div
+  id="toast"
+  class="toast"
+>
+</div>
+
+
+<script>
+
+const cameraInput =
+  document.getElementById("cameraInput");
+
+const videoInput =
+  document.getElementById("videoInput");
+
+const toast =
+  document.getElementById("toast");
+
+
+function openCamera() {
+
+  cameraInput.click();
+
+}
+
+
+function openVideo() {
+
+  videoInput.click();
+
+}
+
+
+function showToast(message) {
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  setTimeout(() => {
+
+    toast.classList.remove("show");
+
+  }, 2500);
+
+}
+
+
+cameraInput.addEventListener(
+  "change",
+  function () {
+
+    if (this.files.length > 0) {
+
+      showToast(
+        "撮影した動画を読み込みました！"
+      );
+
+    }
+
+  }
+);
+
+
+videoInput.addEventListener(
+  "change",
+  function () {
+
+    if (this.files.length > 0) {
+
+      showToast(
+        "動画を読み込みました！"
+      );
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
