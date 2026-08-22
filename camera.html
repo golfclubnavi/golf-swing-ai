@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#078442">
+
+<title>Golf Swing AI</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  background:#eef4ef;
+  color:#172019;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+}
+
+button{
+  font:inherit;
+}
+
+.app{
+  width:100%;
+  max-width:520px;
+  min-height:100vh;
+  margin:0 auto;
+  background:#fff;
+  padding-bottom:82px;
+  overflow:hidden;
+}
+
+/* =========================
+   TOP
+========================= */
+
+.hero{
+  position:relative;
+
+  height:calc(100svh - 82px);
+  min-height:620px;
+  max-height:720px;
+
+  display:flex;
+  flex-direction:column;
+
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,.06),
+      rgba(255,255,255,.08) 40%,
+      rgba(0,0,0,.03)
+    ),
+    url("369F6371-339B-47A3-B083-0620A213595D.png");
+
+  background-size:cover;
+  background-position:center;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar{
+  position:relative;
+  z-index:5;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:
+    calc(13px + env(safe-area-inset-top))
+    22px
+    0;
+}
+
+.top-icon{
+  width:38px;
+  height:38px;
+  border:none;
+  background:transparent;
+  padding:0;
+  color:#076837;
+}
+
+.menu{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+.menu span{
+  width:27px;
+  height:3px;
+  display:block;
+  background:#076837;
+  border-radius:999px;
+}
+
+.bell{
+  position:relative;
+  width:25px;
+  height:28px;
+  margin:auto;
+}
+
+.bell::before{
+  content:"";
+  position:absolute;
+  left:3px;
+  top:2px;
+
+  width:18px;
+  height:19px;
+
+  border:3px solid #076837;
+  border-radius:12px 12px 7px 7px;
+}
+
+.bell::after{
+  content:"";
+  position:absolute;
+  left:10px;
+  bottom:0;
+
+  width:5px;
+  height:5px;
+
+  background:#076837;
+  border-radius:50%;
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.logo-area{
+  position:relative;
+  z-index:4;
+
+  text-align:center;
+  padding:8px 18px 0;
+}
+
+.logo-image{
+  display:block;
+
+  width:min(88%,390px);
+  max-height:235px;
+
+  object-fit:contain;
+
+  margin:0 auto;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+.catch{
+  position:relative;
+  z-index:4;
+
+  margin:2px auto 0;
+  padding:0 18px;
+
+  max-width:390px;
+
+  text-align:center;
+
+  font-size:16px;
+  line-height:1.7;
+  font-weight:800;
+
+  text-shadow:
+    0 2px 8px rgba(255,255,255,.98),
+    0 0 3px rgba(255,255,255,.98);
+}
+
+/* 空きスペース */
+
+.hero-space{
+  flex:1;
+  min-height:10px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.actions{
+  position:relative;
+  z-index:5;
+
+  padding:0 22px 18px;
+}
+
+.action-btn{
+  width:100%;
+  min-height:56px;
+
+  border:none;
+  border-radius:999px;
+
+  margin-top:11px;
+
+  font-size:17px;
+  font-weight:850;
+
+  box-shadow:0 7px 20px rgba(0,0,0,.15);
+}
+
+.action-btn.primary{
+  color:#fff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0bad55,
+      #078442
+    );
+}
+
+.action-btn.secondary{
+  color:#172019;
+  background:rgba(255,255,255,.97);
+}
+
+.btn-icon{
+  margin-right:8px;
+}
+
+/* =========================
+   FEATURES
+========================= */
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+
+  background:#fff;
+
+  border-bottom:1px solid #e4e9e4;
+}
+
+.feature{
+  position:relative;
+
+  padding:18px 6px;
+
+  text-align:center;
+
+  font-size:12px;
+  line-height:1.45;
+  font-weight:750;
+}
+
+.feature:not(:last-child)::after{
+  content:"";
+
+  position:absolute;
+
+  right:0;
+  top:20%;
+
+  width:1px;
+  height:60%;
+
+  background:#e4e7e4;
+}
+
+.feature-icon{
+  display:block;
+
+  margin-bottom:6px;
+
+  color:#078442;
+  font-size:24px;
+}
+
+/* =========================
+   RECENT
+========================= */
+
+.recent{
+  padding:18px 14px 28px;
+
+  background:#f6f8f6;
+}
+
+.recent-card{
+  padding:14px;
+
+  background:#fff;
+
+  border-radius:18px;
+
+  box-shadow:0 4px 16px rgba(0,0,0,.05);
+}
+
+.recent-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  margin-bottom:8px;
+}
+
+.recent-title{
+  font-size:19px;
+  font-weight:850;
+}
+
+.more{
+  color:#078442;
+
+  font-size:13px;
+  font-weight:800;
+}
+
+.swing-row{
+  display:flex;
+  align-items:center;
+
+  gap:11px;
+
+  padding:11px 0;
+}
+
+.swing-row + .swing-row{
+  border-top:1px solid #e6e9e6;
+}
+
+.thumb{
+  flex-shrink:0;
+
+  width:88px;
+  height:66px;
+
+  border-radius:11px;
+
+  background-image:
+    url("369F6371-339B-47A3-B083-0620A213595D.png");
+
+  background-size:cover;
+  background-position:center;
+}
+
+.swing-info{
+  flex:1;
+}
+
+.date{
+  margin-bottom:4px;
+
+  color:#747d76;
+  font-size:12px;
+}
+
+.club{
+  font-size:17px;
+  font-weight:850;
+}
+
+.score{
+  color:#087842;
+
+  font-size:27px;
+  font-weight:900;
+
+  white-space:nowrap;
+}
+
+.score small{
+  font-size:12px;
+}
+
+.chev{
+  color:#9ca49e;
+
+  font-size:26px;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav{
+  position:fixed;
+
+  z-index:30;
+
+  left:50%;
+  bottom:0;
+
+  transform:translateX(-50%);
+
+  width:100%;
+  max-width:520px;
+
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+
+  background:rgba(255,255,255,.97);
+
+  backdrop-filter:blur(14px);
+
+  border-top:1px solid #dde3de;
+
+  padding:
+    8px 4px
+    calc(8px + env(safe-area-inset-bottom));
+}
+
+.nav-item{
+  text-align:center;
+
+  color:#969d98;
+
+  font-size:10px;
+}
+
+.nav-icon{
+  display:block;
+
+  margin-bottom:4px;
+
+  font-size:22px;
+}
+
+.nav-item.active{
+  color:#078442;
+  font-weight:800;
+}
+
+/* =========================
+   VIDEO INPUT
+========================= */
+
+.hidden-input{
+  display:none;
+}
+
+.toast{
+  position:fixed;
+
+  z-index:50;
+
+  left:50%;
+  bottom:100px;
+
+  transform:translate(-50%,20px);
+
+  width:calc(100% - 40px);
+  max-width:440px;
+
+  padding:14px 16px;
+
+  border-radius:14px;
+
+  background:rgba(20,30,22,.95);
+
+  color:#fff;
+
+  text-align:center;
+  font-size:14px;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  transition:.25s;
+}
+
+.toast.show{
+  opacity:1;
+
+  transform:translate(-50%,0);
+}
+
+/* 小さい画面 */
+
+@media(max-height:700px){
+
+  .hero{
+    min-height:580px;
+  }
+
+  .logo-image{
+    max-height:190px;
+  }
+
+  .catch{
+    font-size:14px;
+    line-height:1.55;
+  }
+
+  .action-btn{
+    min-height:51px;
+    font-size:16px;
+    margin-top:9px;
+  }
+
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+<section class="hero">
+
+
+<div class="topbar">
+
+<button class="top-icon" aria-label="メニュー">
+
+<div class="menu">
+<span></span>
+<span></span>
+<span></span>
+</div>
+
+</button>
+
+
+<button class="top-icon" aria-label="通知">
+
+<div class="bell"></div>
+
+</button>
+
+</div>
+
+
+<div class="logo-area">
+
+<img
+  class="logo-image"
+  src="logo.PNG"
+  alt="Golf Swing AI"
+/>
+
+</div>
+
+
+<div class="catch">
+
+AIが、あなたのスイングを見える化。<br>
+
+上達への最短ルートをサポートします。
+
+</div>
+
+
+<div class="hero-space"></div>
+
+
+<div class="actions">
+
+<button
+  class="action-btn primary"
+  onclick="openCamera()"
+>
+
+<span class="btn-icon">📷</span>
+
+スイングを撮影する
+
+</button>
+
+
+<button
+  class="action-btn secondary"
+  onclick="openVideo()"
+>
+
+<span class="btn-icon">🖼️</span>
+
+動画から診断する
+
+</button>
+
+</div>
+
+
+</section>
+
+
+<section class="features">
+
+<div class="feature">
+
+<span class="feature-icon">🧠</span>
+
+AIによる<br>
+
+スイング解析
+
+</div>
+
+
+<div class="feature">
+
+<span class="feature-icon">▥</span>
+
+わかりやすい<br>
+
+数値と評価
+
+</div>
+
+
+<div class="feature">
+
+<span class="feature-icon">☑</span>
+
+上達に役立つ<br>
+
+アドバイス
+
+</div>
+
+</section>
+
+
+<section class="recent">
+
+<div class="recent-card">
+
+
+<div class="recent-head">
+
+<div class="recent-title">
+
+最近のスイング
+
+</div>
+
+<div class="more">
+
+すべて見る ›
+
+</div>
+
+</div>
+
+
+<div class="swing-row">
+
+<div class="thumb"></div>
+
+<div class="swing-info">
+
+<div class="date">
+
+2026/08/22 13:30
+
+</div>
+
+<div class="club">
+
+ドライバー
+
+</div>
+
+</div>
+
+<div class="score">
+
+78<small>点</small>
+
+</div>
+
+<div class="chev">
+
+›
+
+</div>
+
+</div>
+
+
+<div class="swing-row">
+
+<div class="thumb"></div>
+
+<div class="swing-info">
+
+<div class="date">
+
+2026/08/20 10:15
+
+</div>
+
+<div class="club">
+
+アイアン
+
+</div>
+
+</div>
+
+<div class="score">
+
+82<small>点</small>
+
+</div>
+
+<div class="chev">
+
+›
+
+</div>
+
+</div>
+
+
+</div>
+
+</section>
+
+</div>
+
+
+<input
+  id="cameraInput"
+  class="hidden-input"
+  type="file"
+  accept="video/*"
+  capture="environment"
+>
+
+
+<input
+  id="videoInput"
+  class="hidden-input"
+  type="file"
+  accept="video/*"
+>
+
+
+<nav class="bottom-nav">
+
+<div class="nav-item active">
+
+<span class="nav-icon">⌂</span>
+
+ホーム
+
+</div>
+
+
+<div class="nav-item">
+
+<span class="nav-icon">▤</span>
+
+診断履歴
+
+</div>
+
+
+<div class="nav-item">
+
+<span class="nav-icon">♡</span>
+
+レッスン
+
+</div>
+
+
+<div class="nav-item">
+
+<span class="nav-icon">♙</span>
+
+マイページ
+
+</div>
+
+</nav>
+
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
+
+<script>
+
+const cameraInput =
+  document.getElementById("cameraInput");
+
+const videoInput =
+  document.getElementById("videoInput");
+
+const toast =
+  document.getElementById("toast");
+
+
+function openCamera(){
+
+  cameraInput.click();
+
+}
+
+
+function openVideo(){
+
+  videoInput.click();
+
+}
+
+
+function showToast(message){
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  setTimeout(()=>{
+
+    toast.classList.remove("show");
+
+  },2200);
+
+}
+
+
+cameraInput.addEventListener(
+  "change",
+  function(){
+
+    if(this.files.length > 0){
+
+      showToast(
+        "撮影動画を読み込みました！"
+      );
+
+    }
+
+  }
+);
+
+
+videoInput.addEventListener(
+  "change",
+  function(){
+
+    if(this.files.length > 0){
+
+      showToast(
+        "動画を読み込みました！"
+      );
+
+    }
+
+  }
+);
+
+</script>
+
+
+</body>
+</html>
