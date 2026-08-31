@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#078442">
+<title>撮影 | Golf Swing AI</title>
+<style>
+*{box-sizing:border-box} html,body{margin:0;background:#eef4ef;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:#172019}
+.page{max-width:520px;min-height:100svh;margin:auto;background:#fff}
+.hero{min-height:100svh;background:linear-gradient(rgba(255,255,255,.04),rgba(255,255,255,.08)),url("369F6371-339B-47A3-B083-0620A213595D.png") center/cover;display:flex;flex-direction:column}
+.top{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;padding:calc(13px + env(safe-area-inset-top)) 18px 8px;color:#078442;font-weight:900}
+.back{border:0;background:transparent;font-size:34px;color:#078442} .title{text-align:center;font-size:18px}
+.brand{text-align:center;padding:14px 20px 8px} .brand img{width:min(70%,300px);max-height:160px;object-fit:contain}
+.brand h1{margin:12px 0 4px;font-size:28px} .brand p{margin:0;color:#526057;font-size:14px}
+.spacer{flex:1} .choices{padding:0 22px 28px} .choice{width:100%;min-height:64px;border:0;border-radius:999px;margin-top:12px;font-size:18px;font-weight:850;box-shadow:0 7px 20px rgba(0,0,0,.12)} .primary{color:white;background:#08a54f} .secondary{background:rgba(255,255,255,.97);color:#172019}
+.hidden{display:none}
+.analysis{display:none;background:#0b120e;min-height:100svh;color:white} .analysis.show{display:block} .selection.hide{display:none}
+.analysis-head{display:flex;align-items:center;justify-content:space-between;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;background:#0b120e} .badge{padding:7px 12px;border-radius:999px;background:#0a8b46;font-weight:800;font-size:13px}
+.video-wrap{
+  position:relative;
+  width:calc(100% - 24px);
+  max-width:430px;
+  margin:0 auto;
+  background:#000;
+  aspect-ratio:9/16;
+  max-height:68svh;
+  overflow:hidden;
+}
+video{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center center;
+  background:#000;
+}
+canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+.controls{padding:14px 16px 24px;background:#111c15} .speed{display:flex;justify-content:center;gap:8px;flex-wrap:wrap} .speed button,.frame button{border:0;border-radius:999px;padding:10px 14px;background:#26352b;color:#fff;font-weight:800} .speed button.active{background:#0a8b46}
+.frame{display:flex;justify-content:center;gap:10px;margin-top:12px} .analyze{width:100%;margin-top:14px;padding:15px;border:0;border-radius:999px;background:#0a8b46;color:#fff;font-weight:900}
+.note{font-size:12px;color:#b9c4bc;line-height:1.6;margin-top:10px;text-align:center}
+</style>
+</head>
+<body>
+<div class="page">
+<section class="selection hero" id="selection">
+<div class="top"><button class="back" onclick="location.href='index.html'">‹</button><div class="title">撮影方向を選択</div><div></div></div>
+<div class="brand"><img src="logo.PNG" alt="Golf Swing AI"><h1>スイングを撮影</h1><p>AI分析したい撮影方向を選んでください</p></div>
+<div class="spacer"></div>
+<div class="choices">
+<button class="choice primary" onclick="chooseAngle('後方')">🏌️　後方から撮影</button>
+<button class="choice secondary" onclick="chooseAngle('正面')">🎥　正面から撮影</button>
+<button class="choice secondary" onclick="chooseAngle('側面')">📐　側面から撮影</button>
+<button class="choice secondary" onclick="location.href='index.html'">ホームに戻る</button>
+</div>
+</section>
+
+<section class="analysis" id="analysis">
+<div class="analysis-head"><button class="back" style="color:white" onclick="resetCapture()">‹</button><div><b>スイング分析</b></div><div class="badge" id="angleBadge">後方</div></div>
+<div class="video-wrap"><video id="video" controls playsinline></video><canvas id="overlay"></canvas></div>
+<div class="controls">
+<div class="speed">
+<button onclick="setSpeed(.25)">0.25×</button><button onclick="setSpeed(.5)">0.5×</button><button class="active" onclick="setSpeed(1)">1×</button><button onclick="setSpeed(2)">2×</button>
+</div>
+<div class="frame"><button onclick="stepFrame(-1)">◀ 1コマ</button><button onclick="togglePlay()">▶︎ / Ⅱ</button><button onclick="stepFrame(1)">1コマ ▶</button></div>
+<div id="cameraAiStatus" style="margin-top:12px;text-align:center;color:#b9c4bc;font-size:12px;">AIモデル未起動</div><div id="cameraSpeedPanelV6" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">
+  <div style="background:#1c2b21;border-radius:14px;padding:10px;text-align:center;color:white">
+    <div style="font-size:11px;color:#aebdb3">手首速度指数</div><b id="cameraSpeedWristV6">--</b>
+  </div>
+  <div style="background:#1c2b21;border-radius:14px;padding:10px;text-align:center;color:white">
+    <div style="font-size:11px;color:#aebdb3">肩ライン</div><b id="cameraSpeedShoulderV6">--°/s</b>
+  </div>
+  <div style="background:#1c2b21;border-radius:14px;padding:10px;text-align:center;color:white">
+    <div style="font-size:11px;color:#aebdb3">腰ライン</div><b id="cameraSpeedHipV6">--°/s</b>
+  </div>
+</div>
+<button class="analyze" id="cameraAiBtn">AI骨格解析を開始</button>
+<div class="note">実AI骨格推定モード：人物を検出すると骨格・関節角度・現在フレーム評価を表示します。</div>
+</div>
+</section>
+</div>
+
+<input id="captureInput" class="hidden" type="file" accept="video/*" capture="environment">
+
+<script>
+const input=document.getElementById('captureInput');
+const selection=document.getElementById('selection');
+const analysis=document.getElementById('analysis');
+const video=document.getElementById('video');
+const overlay=document.getElementById('overlay');
+let angle='後方', objectUrl=null;
+
+function chooseAngle(a){
+  angle=a;
+  sessionStorage.setItem('golfSwingAngle',a);
+  input.value='';
+  input.click();
+}
+
+input.addEventListener('change',()=>{
+  if(!input.files||!input.files[0]) return;
+  if(objectUrl) URL.revokeObjectURL(objectUrl);
+  objectUrl=URL.createObjectURL(input.files[0]);
+  video.src=objectUrl;
+  document.getElementById('angleBadge').textContent=angle;
+  selection.classList.add('hide');
+  analysis.classList.add('show');
+  window.scrollTo(0,0);
+});
+
+function setSpeed(v){
+  video.playbackRate=v;
+  document.querySelectorAll('.speed button').forEach(b=>b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+function stepFrame(dir){ video.pause(); video.currentTime=Math.max(0,Math.min(video.duration||999,video.currentTime+dir/30)); }
+function togglePlay(){ video.paused?video.play():video.pause(); }
+function resetCapture(){ analysis.classList.remove('show'); selection.classList.remove('hide'); if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;} video.removeAttribute('src');video.load(); }
+</script>
+
+<script type="module">
+import {initPoseAI, detectPose, drawPose, calculateMetrics, buildAssessment, resetSmoothing, calculateSpeedMetrics} from "./pose-ai-v6.js";
+
+const aiButton=document.getElementById("cameraAiBtn");
+const aiStatus=document.getElementById("cameraAiStatus");
+const videoEl=document.getElementById("video");
+const canvasEl=document.getElementById("overlay");
+let aiRunning=false, aiRaf=0;
+let cameraFrozenState=null;
+let cameraFrameHandleV6=0;
+let cameraLastSafeTime=-1;
+
+function ensureMetricPanel(){
+  if(document.getElementById("cameraMetricPanel")) return;
+  const controls=document.querySelector(".controls");
+  const panel=document.createElement("div");
+  panel.id="cameraMetricPanel";
+  panel.style.cssText="margin-top:12px;padding:14px;border-radius:16px;background:#f7faf7;color:#172019;font-size:13px;line-height:1.7";
+  panel.innerHTML='<b>現在フレーム評価</b><div id="cameraMetrics" style="margin-top:6px">AI骨格解析を開始してください</div><div id="cameraSpeedMetrics" style="margin-top:8px;color:#526057">速度指標：--</div>';
+  controls.appendChild(panel);
+}
+
+let cameraLastTime=-1;
+
+function cameraSaveFrozen(lm,m,a,s){
+  cameraFrozenState={
+    landmarks: lm ? lm.map(p=>({...p})) : null,
+    metrics:{...m},
+    score:a?.score ?? '--',
+    speed:s ? {...s} : null
+  };
+}
+
+function cameraRestoreFrozen(){
+  if(!cameraFrozenState) return;
+  if(cameraFrozenState.landmarks) drawPose(canvasEl,videoEl,cameraFrozenState.landmarks);
+
+  const m=cameraFrozenState.metrics;
+  document.getElementById("cameraMetrics").innerHTML=
+    `スコア <b style="font-size:24px;color:#078442">${cameraFrozenState.score}点</b><br>`+
+    `左肘 ${m.leftElbow??"--"}° / 右肘 ${m.rightElbow??"--"}°<br>`+
+    `左膝 ${m.leftKnee??"--"}° / 右膝 ${m.rightKnee??"--"}°<br>`+
+    `前傾角 ${m.spineTilt??"--"}°`;
+
+  const s=cameraFrozenState.speed;
+  if(s){
+    document.getElementById("cameraSpeedWristV6").textContent=
+      Number.isFinite(s.wristSpeedBodyPerSec)?s.wristSpeedBodyPerSec.toFixed(2):"--";
+    document.getElementById("cameraSpeedShoulderV6").textContent=
+      Number.isFinite(s.shoulderLineDegPerSec)?Math.round(s.shoulderLineDegPerSec)+"°/s":"--°/s";
+    document.getElementById("cameraSpeedHipV6").textContent=
+      Number.isFinite(s.hipLineDegPerSec)?Math.round(s.hipLineDegPerSec)+"°/s":"--°/s";
+  }
+}
+
+function cameraAnalyzeOnce(){
+  try{
+    const t=videoEl.currentTime||0;
+    const result=detectPose(videoEl);
+    const lm=result?.landmarks?.[0];
+    if(!lm) return;
+
+    drawPose(canvasEl,videoEl,lm);
+    const m=calculateMetrics(lm,sessionStorage.getItem("golfSwingAngle")||"後方");
+    const a=buildAssessment(m);
+    const s=calculateSpeedMetrics(lm,t);
+
+    cameraSaveFrozen(lm,m,a,s);
+    cameraLastSafeTime=t;
+    cameraLastTime=t;
+
+    document.getElementById("cameraMetrics").innerHTML=
+      `スコア <b style="font-size:24px;color:#078442">${a.score}点</b><br>`+
+      `左肘 ${m.leftElbow??"--"}° / 右肘 ${m.rightElbow??"--"}°<br>`+
+      `左膝 ${m.leftKnee??"--"}° / 右膝 ${m.rightKnee??"--"}°<br>`+
+      `前傾角 ${m.spineTilt??"--"}°`;
+
+    document.getElementById("cameraSpeedWristV6").textContent=
+      Number.isFinite(s?.wristSpeedBodyPerSec)?s.wristSpeedBodyPerSec.toFixed(2):"--";
+    document.getElementById("cameraSpeedShoulderV6").textContent=
+      Number.isFinite(s?.shoulderLineDegPerSec)?Math.round(s.shoulderLineDegPerSec)+"°/s":"--°/s";
+    document.getElementById("cameraSpeedHipV6").textContent=
+      Number.isFinite(s?.hipLineDegPerSec)?Math.round(s.hipLineDegPerSec)+"°/s":"--°/s";
+
+    if(aiStatus) aiStatus.textContent=videoEl.paused?"一時停止中（骨格固定）":"人物を検出中";
+  }catch(e){
+    cameraRestoreFrozen();
+    if(aiStatus) aiStatus.textContent="一時停止中（骨格固定）";
+    console.error(e);
+  }
+}
+
+function cameraScheduleV6(){
+  if(!aiRunning || videoEl.paused || videoEl.ended) return;
+  if('requestVideoFrameCallback' in HTMLVideoElement.prototype){
+    cameraFrameHandleV6=videoEl.requestVideoFrameCallback(()=>{
+      if(Math.abs((videoEl.currentTime||0)-cameraLastSafeTime)>0.0005) cameraAnalyzeOnce();
+      cameraScheduleV6();
+    });
+  }else{
+    cameraFrameHandleV6=requestAnimationFrame(()=>{
+      if(!videoEl.paused && Math.abs((videoEl.currentTime||0)-cameraLastSafeTime)>0.0005) cameraAnalyzeOnce();
+      cameraScheduleV6();
+    });
+  }
+}
+
+function cameraStopV6(){
+  if(!cameraFrameHandleV6) return;
+  if('cancelVideoFrameCallback' in HTMLVideoElement.prototype){
+    try{videoEl.cancelVideoFrameCallback(cameraFrameHandleV6);}catch(e){}
+  }else{
+    cancelAnimationFrame(cameraFrameHandleV6);
+  }
+  cameraFrameHandleV6=0;
+}
+
+videoEl.addEventListener("play",()=>{
+  if(aiRunning) cameraScheduleV6();
+});
+
+videoEl.addEventListener("pause",()=>{
+  cameraStopV6();
+  if(aiRunning){
+    cameraRestoreFrozen();
+    if(aiStatus) aiStatus.textContent="一時停止中（骨格固定）";
+  }
+});
+
+videoEl.addEventListener("seeked",()=>{
+  if(aiRunning){
+    cameraAnalyzeOnce();
+    if(videoEl.paused){
+      cameraRestoreFrozen();
+      if(aiStatus) aiStatus.textContent="一時停止中（骨格固定）";
+    }
+  }
+});
+
+if(aiButton){
+  ensureMetricPanel();
+  aiButton.addEventListener("click",async()=>{
+    if(aiRunning){
+      aiRunning=false;
+      cameraStopV6();
+      aiButton.textContent="AI骨格解析を開始";
+      if(aiStatus) aiStatus.textContent="解析停止";
+      return;
+    }
+    aiButton.disabled=true;
+    aiButton.textContent="AIモデル読込中…";
+    try{
+      await initPoseAI(msg=>{ if(aiStatus) aiStatus.textContent=msg; });
+      resetSmoothing();
+      cameraFrozenState=null;
+      cameraLastSafeTime=-1;
+      cameraLastTime=-1;
+      aiRunning=true;
+      aiButton.textContent="AI骨格解析を停止";
+      if(!videoEl.paused) cameraScheduleV6(); else cameraAnalyzeOnce();
+    }catch(e){
+      alert("AIモデルを読み込めませんでした。通信状態を確認してください。");
+      console.error(e);
+      aiButton.textContent="AI骨格解析を開始";
+    }finally{
+      aiButton.disabled=false;
+    }
+  });
+}
+</script>
+
+</body>
+</html>
