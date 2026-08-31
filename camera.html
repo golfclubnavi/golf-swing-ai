@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#078442">
 
-<title>Golf Swing AI</title>
+<title>撮影 | Golf Swing AI</title>
 
 <style>
 *{
@@ -515,217 +515,28 @@ button{
 
 <div class="app">
 
-<section class="hero">
-
-
+<section class="hero camera-hero">
 <div class="topbar">
-
-<button class="top-icon" aria-label="メニュー">
-
-<div class="menu">
-<span></span>
-<span></span>
-<span></span>
+<button class="top-icon" aria-label="戻る" onclick="window.location.href='index.html'" style="font-size:30px;font-weight:700;">‹</button>
+<div style="color:#076837;font-weight:850;font-size:18px;">撮影方向を選択</div>
+<div style="width:38px;"></div>
 </div>
-
-</button>
-
-
-<button class="top-icon" aria-label="通知">
-
-<div class="bell"></div>
-
-</button>
-
+<div style="padding:22px 22px 8px;text-align:center;">
+<img class="logo-image" src="logo.PNG" alt="Golf Swing AI" style="max-height:150px;">
+<h1 style="font-size:24px;margin:12px 0 8px;">スイングを撮影</h1>
+<p style="margin:0;color:#526057;font-size:14px;line-height:1.65;">AI分析したい撮影方向を選んでください</p>
 </div>
-
-
-<div class="logo-area">
-
-<img
-  class="logo-image"
-  src="logo.PNG"
-  alt="Golf Swing AI"
-/>
-
-</div>
-
-
-<div class="catch">
-
-AIが、あなたのスイングを見える化。<br>
-
-上達への最短ルートをサポートします。
-
-</div>
-
-
 <div class="hero-space"></div>
-
-
-<div class="actions">
-
-<button
-  class="action-btn primary"
-  onclick="openCamera()"
->
-
-<span class="btn-icon">📷</span>
-
-スイングを撮影する
-
-</button>
-
-
-<button
-  class="action-btn secondary"
-  onclick="openVideo()"
->
-
-<span class="btn-icon">🖼️</span>
-
-動画から診断する
-
-</button>
-
+<div class="actions" style="padding-bottom:28px;">
+<button class="action-btn primary" onclick="startCamera('後方')"><span class="btn-icon">🏌️</span>後方から撮影</button>
+<button class="action-btn secondary" onclick="startCamera('正面')"><span class="btn-icon">🎥</span>正面から撮影</button>
+<button class="action-btn secondary" onclick="startCamera('側面')"><span class="btn-icon">📐</span>側面から撮影</button>
+<button class="action-btn secondary" onclick="window.location.href='index.html'" style="box-shadow:none;border:1px solid #dfe6e1;">ホームに戻る</button>
 </div>
-
-
 </section>
 
 
-<section class="features">
 
-<div class="feature">
-
-<span class="feature-icon">🧠</span>
-
-AIによる<br>
-
-スイング解析
-
-</div>
-
-
-<div class="feature">
-
-<span class="feature-icon">▥</span>
-
-わかりやすい<br>
-
-数値と評価
-
-</div>
-
-
-<div class="feature">
-
-<span class="feature-icon">☑</span>
-
-上達に役立つ<br>
-
-アドバイス
-
-</div>
-
-</section>
-
-
-<section class="recent">
-
-<div class="recent-card">
-
-
-<div class="recent-head">
-
-<div class="recent-title">
-
-最近のスイング
-
-</div>
-
-<div class="more">
-
-すべて見る ›
-
-</div>
-
-</div>
-
-
-<div class="swing-row">
-
-<div class="thumb"></div>
-
-<div class="swing-info">
-
-<div class="date">
-
-2026/08/22 13:30
-
-</div>
-
-<div class="club">
-
-ドライバー
-
-</div>
-
-</div>
-
-<div class="score">
-
-78<small>点</small>
-
-</div>
-
-<div class="chev">
-
-›
-
-</div>
-
-</div>
-
-
-<div class="swing-row">
-
-<div class="thumb"></div>
-
-<div class="swing-info">
-
-<div class="date">
-
-2026/08/20 10:15
-
-</div>
-
-<div class="club">
-
-アイアン
-
-</div>
-
-</div>
-
-<div class="score">
-
-82<small>点</small>
-
-</div>
-
-<div class="chev">
-
-›
-
-</div>
-
-</div>
-
-
-</div>
-
-</section>
 
 </div>
 
@@ -736,14 +547,6 @@ AIによる<br>
   type="file"
   accept="video/*"
   capture="environment"
->
-
-
-<input
-  id="videoInput"
-  class="hidden-input"
-  type="file"
-  accept="video/*"
 >
 
 
@@ -794,77 +597,28 @@ AIによる<br>
 
 
 <script>
-
-const cameraInput =
-  document.getElementById("cameraInput");
-
-const videoInput =
-  document.getElementById("videoInput");
-
-const toast =
-  document.getElementById("toast");
-
-
-function openCamera(){
-
-  cameraInput.click();
-
+const cameraInput=document.getElementById("cameraInput");
+const toast=document.getElementById("toast");
+let selectedAngle="";
+function startCamera(angle){
+ selectedAngle=angle;
+ sessionStorage.setItem("golfSwingAngle",angle);
+ cameraInput.value="";
+ cameraInput.click();
 }
-
-
-function openVideo(){
-
-  videoInput.click();
-
-}
-
-
 function showToast(message){
-
-  toast.textContent = message;
-
-  toast.classList.add("show");
-
-  setTimeout(()=>{
-
-    toast.classList.remove("show");
-
-  },2200);
-
+ toast.textContent=message;
+ toast.classList.add("show");
+ setTimeout(()=>toast.classList.remove("show"),2200);
 }
-
-
-cameraInput.addEventListener(
-  "change",
-  function(){
-
-    if(this.files.length > 0){
-
-      showToast(
-        "撮影動画を読み込みました！"
-      );
-
-    }
-
-  }
-);
-
-
-videoInput.addEventListener(
-  "change",
-  function(){
-
-    if(this.files.length > 0){
-
-      showToast(
-        "動画を読み込みました！"
-      );
-
-    }
-
-  }
-);
-
+cameraInput.addEventListener("change",function(){
+ if(this.files&&this.files.length>0){
+  const file=this.files[0];
+  showToast(selectedAngle+"の撮影動画を読み込みました！");
+  sessionStorage.setItem("golfSwingVideoName",file.name||"recorded-video");
+  sessionStorage.setItem("golfSwingVideoType",file.type||"video/*");
+ }
+});
 </script>
 
 
