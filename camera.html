@@ -17,7 +17,31 @@
 .hidden{display:none}
 .analysis{display:none;background:#0b120e;min-height:100svh;color:white} .analysis.show{display:block} .selection.hide{display:none}
 .analysis-head{display:flex;align-items:center;justify-content:space-between;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;background:#0b120e} .badge{padding:7px 12px;border-radius:999px;background:#0a8b46;font-weight:800;font-size:13px}
-.video-wrap{position:relative;background:#000;aspect-ratio:9/16;max-height:68svh} video{width:100%;height:100%;object-fit:contain;background:#000} canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.video-wrap{
+  position:relative;
+  width:calc(100% - 24px);
+  max-width:430px;
+  margin:0 auto;
+  background:#000;
+  aspect-ratio:9/16;
+  max-height:68svh;
+  overflow:hidden;
+}
+video{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center center;
+  background:#000;
+}
+canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
 .controls{padding:14px 16px 24px;background:#111c15} .speed{display:flex;justify-content:center;gap:8px;flex-wrap:wrap} .speed button,.frame button{border:0;border-radius:999px;padding:10px 14px;background:#26352b;color:#fff;font-weight:800} .speed button.active{background:#0a8b46}
 .frame{display:flex;justify-content:center;gap:10px;margin-top:12px} .analyze{width:100%;margin-top:14px;padding:15px;border:0;border-radius:999px;background:#0a8b46;color:#fff;font-weight:900}
 .note{font-size:12px;color:#b9c4bc;line-height:1.6;margin-top:10px;text-align:center}
