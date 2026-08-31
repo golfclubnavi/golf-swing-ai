@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#078442">
+<title>動画診断 | Golf Swing AI</title>
+<style>
+*{box-sizing:border-box} body{margin:0;background:#eef4ef;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:#172019}
+.page{max-width:520px;min-height:100svh;margin:auto;background:#fff;padding:calc(20px + env(safe-area-inset-top)) 18px 30px}
+.back{border:0;background:transparent;font-size:34px;color:#078442} .logo{display:block;width:min(72%,300px);margin:10px auto 12px} h1{text-align:center;margin:6px 0 8px} p{text-align:center;color:#657168;line-height:1.6}
+.box{margin-top:24px;padding:22px;border-radius:20px;background:#f5f8f5;border:1px solid #dfe7e0;text-align:center} .pick{width:100%;padding:16px;border:0;border-radius:999px;background:#078b46;color:#fff;font-weight:900;font-size:17px}
+video{width:100%;margin-top:18px;border-radius:16px;background:#000;display:none} .tools{display:none;margin-top:14px} .tools.show{display:block} .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap} .row button{border:0;border-radius:999px;padding:10px 14px;background:#eef2ef;font-weight:800}
+</style>
+</head>
+<body><div class="page">
+<button class="back" onclick="location.href='index.html'">‹</button>
+<img class="logo" src="logo.PNG" alt="Golf Swing AI">
+<h1>動画から診断</h1><p>保存済みのスイング動画を選択して、スロー再生・コマ送りで確認できます。</p>
+<div class="box"><button class="pick" onclick="file.click()">動画を選択する</button><input id="file" type="file" accept="video/*" hidden>
+<video id="v" controls playsinline></video><div class="tools" id="tools"><div class="row"><button onclick="speed(.25)">0.25×</button><button onclick="speed(.5)">0.5×</button><button onclick="speed(1)">1×</button><button onclick="step(-1)">◀ 1コマ</button><button onclick="step(1)">1コマ ▶</button></div></div></div>
+</div>
+<script>
+let u=null;const file=document.getElementById('file'),v=document.getElementById('v'),tools=document.getElementById('tools');
+file.onchange=()=>{if(!file.files[0])return;if(u)URL.revokeObjectURL(u);u=URL.createObjectURL(file.files[0]);v.src=u;v.style.display='block';tools.classList.add('show')};
+function speed(x){v.playbackRate=x} function step(d){v.pause();v.currentTime=Math.max(0,Math.min(v.duration||999,v.currentTime+d/30))}
+</script></body></html>
