@@ -69,7 +69,7 @@ canvas{
 <button onclick="setSpeed(.25)">0.25×</button><button onclick="setSpeed(.5)">0.5×</button><button class="active" onclick="setSpeed(1)">1×</button><button onclick="setSpeed(2)">2×</button>
 </div>
 <div class="frame"><button onclick="stepFrame(-1)">◀ 1コマ</button><button onclick="togglePlay()">▶︎ / Ⅱ</button><button onclick="stepFrame(1)">1コマ ▶</button></div>
-<button class="analyze" onclick="demoAnalysis()">AI骨格解析を開始</button>
+<button class="analyze" id="cameraAiBtn">AI骨格解析を開始</button>
 <div class="note">Ver.1ではスロー再生・コマ送り・撮影方向の保存まで実装。次段階で実AI骨格推定を接続します。</div>
 </div>
 </section>
@@ -122,5 +122,70 @@ function demoAnalysis(){
   alert('骨格表示のデモを重ねました。次に実AI姿勢推定へ接続します。');
 }
 </script>
+
+<script type="module">
+import {initPoseAI, detectPose, drawPose, calculateMetrics, buildAssessment} from "./pose-ai.js";
+
+const aiButton=document.getElementById("cameraAiBtn");
+const videoEl=document.getElementById("video");
+const canvasEl=document.getElementById("overlay");
+let aiRunning=false, aiRaf=0;
+
+function ensureMetricPanel(){
+  if(document.getElementById("cameraMetricPanel")) return;
+  const controls=document.querySelector(".controls");
+  const panel=document.createElement("div");
+  panel.id="cameraMetricPanel";
+  panel.style.cssText="margin-top:12px;padding:14px;border-radius:16px;background:#f7faf7;color:#172019;font-size:13px;line-height:1.7";
+  panel.innerHTML='<b>現在フレーム評価</b><div id="cameraMetrics" style="margin-top:6px">AI骨格解析を開始してください</div>';
+  controls.appendChild(panel);
+}
+
+function frame(){
+  if(!aiRunning) return;
+  try{
+    const result=detectPose(videoEl);
+    const lm=result?.landmarks?.[0];
+    if(lm){
+      drawPose(canvasEl,lm);
+      const m=calculateMetrics(lm,sessionStorage.getItem("golfSwingAngle")||"後方");
+      const a=buildAssessment(m);
+      document.getElementById("cameraMetrics").innerHTML=
+        `スコア <b style="font-size:24px;color:#078442">${a.score}点</b><br>`+
+        `左肘 ${m.leftElbow??"--"}° / 右肘 ${m.rightElbow??"--"}°<br>`+
+        `左膝 ${m.leftKnee??"--"}° / 右膝 ${m.rightKnee??"--"}°<br>`+
+        `前傾角 ${m.spineTilt??"--"}°`;
+    }
+  }catch(e){ console.error(e); }
+  aiRaf=requestAnimationFrame(frame);
+}
+
+if(aiButton){
+  ensureMetricPanel();
+  aiButton.addEventListener("click",async()=>{
+    if(aiRunning){
+      aiRunning=false;
+      cancelAnimationFrame(aiRaf);
+      aiButton.textContent="AI骨格解析を開始";
+      return;
+    }
+    aiButton.disabled=true;
+    aiButton.textContent="AIモデル読込中…";
+    try{
+      await initPoseAI();
+      aiRunning=true;
+      aiButton.textContent="AI骨格解析を停止";
+      frame();
+    }catch(e){
+      alert("AIモデルを読み込めませんでした。通信状態を確認してください。");
+      console.error(e);
+      aiButton.textContent="AI骨格解析を開始";
+    }finally{
+      aiButton.disabled=false;
+    }
+  });
+}
+</script>
+
 </body>
 </html>
