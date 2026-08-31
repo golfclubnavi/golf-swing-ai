@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#078442">
+<title>保存した動画から診断 | Golf Swing AI</title>
+<style>
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  background:#eef4ef;
+  color:#172019;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+}
+button{font:inherit}
+.page{
+  width:100%;
+  max-width:520px;
+  min-height:100svh;
+  margin:auto;
+  background:#fff;
+}
+.hero{
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  background:
+    linear-gradient(rgba(255,255,255,.06),rgba(255,255,255,.09)),
+    url("369F6371-339B-47A3-B083-0620A213595D.png") center/cover;
+}
+.top{
+  display:grid;
+  grid-template-columns:48px 1fr 48px;
+  align-items:center;
+  padding:calc(13px + env(safe-area-inset-top)) 18px 8px;
+  color:#078442;
+  font-weight:900;
+}
+.back{
+  border:0;
+  background:transparent;
+  font-size:34px;
+  color:#078442;
+}
+.top-title{
+  text-align:center;
+  font-size:18px;
+}
+.brand{
+  text-align:center;
+  padding:12px 20px 8px;
+}
+.brand img{
+  width:min(70%,300px);
+  max-height:160px;
+  object-fit:contain;
+}
+.brand h1{
+  margin:12px 0 6px;
+  font-size:28px;
+}
+.brand p{
+  margin:0;
+  color:#526057;
+  font-size:14px;
+  line-height:1.65;
+}
+.spacer{flex:1}
+.choices{
+  padding:0 22px 28px;
+}
+.choice{
+  width:100%;
+  min-height:62px;
+  border:0;
+  border-radius:999px;
+  margin-top:12px;
+  font-size:18px;
+  font-weight:850;
+  box-shadow:0 7px 20px rgba(0,0,0,.12);
+}
+.primary{
+  color:white;
+  background:#08a54f;
+}
+.secondary{
+  color:#172019;
+  background:rgba(255,255,255,.97);
+}
+.hidden{display:none}
+
+/* Analysis */
+.analysis{
+  display:none;
+  min-height:100svh;
+  color:#fff;
+  background:#0b120e;
+}
+.analysis.show{display:block}
+.selection.hide{display:none}
+
+.analysis-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:calc(12px + env(safe-area-inset-top)) 16px 12px;
+  background:#0b120e;
+}
+.analysis-title{
+  font-size:18px;
+  font-weight:900;
+}
+.badge{
+  padding:7px 12px;
+  border-radius:999px;
+  background:#0a8b46;
+  font-weight:800;
+  font-size:13px;
+}
+
+.video-wrap{
+  position:relative;
+  width:calc(100% - 24px);
+  max-width:430px;
+  margin:0 auto;
+  background:#000;
+  aspect-ratio:9/16;
+  max-height:68svh;
+  overflow:hidden;
+}
+video{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center center;
+  background:#000;
+}
+canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+
+.controls{
+  padding:14px 16px 28px;
+  background:#111c15;
+}
+.speed,.frame{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.speed button,.frame button{
+  border:0;
+  border-radius:999px;
+  padding:10px 14px;
+  background:#26352b;
+  color:#fff;
+  font-weight:800;
+}
+.speed button.active{
+  background:#0a8b46;
+}
+.frame{margin-top:12px}
+.analyze{
+  width:100%;
+  margin-top:14px;
+  padding:15px;
+  border:0;
+  border-radius:999px;
+  background:#0a8b46;
+  color:#fff;
+  font-weight:900;
+}
+.note{
+  font-size:12px;
+  color:#b9c4bc;
+  line-height:1.6;
+  margin-top:10px;
+  text-align:center;
+}
+.toast{
+  position:fixed;
+  z-index:50;
+  left:50%;
+  bottom:28px;
+  transform:translate(-50%,20px);
+  width:calc(100% - 40px);
+  max-width:440px;
+  padding:14px 16px;
+  border-radius:14px;
+  background:rgba(20,30,22,.95);
+  color:#fff;
+  text-align:center;
+  font-size:14px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+}
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<section class="selection hero" id="selection">
+  <div class="top">
+    <button class="back" onclick="location.href='index.html'">‹</button>
+    <div class="top-title">保存した動画から診断</div>
+    <div></div>
+  </div>
+
+  <div class="brand">
+    <img src="logo.PNG" alt="Golf Swing AI">
+    <h1>撮影方向を選択</h1>
+    <p>
+      保存済み動画をAI診断する前に、<br>
+      動画を撮影した方向を選んでください
+    </p>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="choices">
+    <button class="choice primary" onclick="chooseAngle('後方')">🏌️　後方から撮影した動画</button>
+    <button class="choice secondary" onclick="chooseAngle('正面')">🎥　正面から撮影した動画</button>
+    <button class="choice secondary" onclick="chooseAngle('側面')">📐　側面から撮影した動画</button>
+    <button class="choice secondary" onclick="location.href='index.html'">ホームに戻る</button>
+  </div>
+</section>
+
+<section class="analysis" id="analysis">
+  <div class="analysis-head">
+    <button class="back" style="color:white" onclick="resetSelection()">‹</button>
+    <div class="analysis-title">スイング分析</div>
+    <div class="badge" id="angleBadge">後方</div>
+  </div>
+
+  <div class="video-wrap">
+    <video id="video" controls playsinline></video>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <div class="controls">
+    <div class="speed">
+      <button onclick="setSpeed(.25,this)">0.25×</button>
+      <button onclick="setSpeed(.5,this)">0.5×</button>
+      <button class="active" onclick="setSpeed(1,this)">1×</button>
+      <button onclick="setSpeed(2,this)">2×</button>
+    </div>
+
+    <div class="frame">
+      <button onclick="stepFrame(-1)">◀ 1コマ</button>
+      <button onclick="togglePlay()">▶︎ / Ⅱ</button>
+      <button onclick="stepFrame(1)">1コマ ▶</button>
+    </div>
+
+    <button class="analyze" onclick="demoAnalysis()">AI骨格解析を開始</button>
+
+    <div class="note">
+      撮影方向：<span id="angleText">後方</span><br>
+      Ver.1ではスロー再生・コマ送り・骨格表示デモまで対応。
+    </div>
+  </div>
+</section>
+
+</div>
+
+<input id="fileInput" class="hidden" type="file" accept="video/*">
+<div id="toast" class="toast"></div>
+
+<script>
+const fileInput=document.getElementById('fileInput');
+const selection=document.getElementById('selection');
+const analysis=document.getElementById('analysis');
+const video=document.getElementById('video');
+const overlay=document.getElementById('overlay');
+const toast=document.getElementById('toast');
+
+let angle='後方';
+let objectUrl=null;
+
+function chooseAngle(a){
+  angle=a;
+  sessionStorage.setItem('golfSwingAngle',a);
+  fileInput.value='';
+  fileInput.click();
+}
+
+fileInput.addEventListener('change',()=>{
+  if(!fileInput.files||!fileInput.files[0]) return;
+
+  if(objectUrl) URL.revokeObjectURL(objectUrl);
+  objectUrl=URL.createObjectURL(fileInput.files[0]);
+
+  video.src=objectUrl;
+
+  document.getElementById('angleBadge').textContent=angle;
+  document.getElementById('angleText').textContent=angle;
+
+  selection.classList.add('hide');
+  analysis.classList.add('show');
+
+  showToast(angle+'の保存動画を読み込みました！');
+  window.scrollTo(0,0);
+});
+
+function setSpeed(v,btn){
+  video.playbackRate=v;
+  document.querySelectorAll('.speed button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function stepFrame(dir){
+  video.pause();
+  video.currentTime=Math.max(
+    0,
+    Math.min(video.duration||999,video.currentTime+dir/30)
+  );
+}
+
+function togglePlay(){
+  video.paused ? video.play() : video.pause();
+}
+
+function resetSelection(){
+  analysis.classList.remove('show');
+  selection.classList.remove('hide');
+
+  if(objectUrl){
+    URL.revokeObjectURL(objectUrl);
+    objectUrl=null;
+  }
+
+  video.removeAttribute('src');
+  video.load();
+
+  const ctx=overlay.getContext('2d');
+  ctx.clearRect(0,0,overlay.width,overlay.height);
+}
+
+function showToast(message){
+  toast.textContent=message;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2200);
+}
+
+function demoAnalysis(){
+  const c=overlay;
+  const ctx=c.getContext('2d');
+
+  c.width=c.clientWidth*devicePixelRatio;
+  c.height=c.clientHeight*devicePixelRatio;
+
+  ctx.scale(devicePixelRatio,devicePixelRatio);
+  ctx.clearRect(0,0,c.clientWidth,c.clientHeight);
+
+  ctx.lineWidth=3;
+  ctx.strokeStyle='#50e3c2';
+  ctx.fillStyle='#50e3c2';
+
+  const w=c.clientWidth,h=c.clientHeight;
+
+  let pts;
+
+  if(angle==='正面'){
+    pts=[[.5,.20],[.42,.31],[.58,.31],[.35,.44],[.65,.44],[.44,.55],[.56,.55],[.40,.70],[.60,.70],[.39,.87],[.61,.87]];
+  }else if(angle==='側面'){
+    pts=[[.53,.20],[.50,.31],[.55,.32],[.48,.45],[.58,.45],[.50,.56],[.56,.57],[.48,.71],[.58,.72],[.47,.88],[.60,.88]];
+  }else{
+    pts=[[.5,.22],[.44,.32],[.56,.33],[.40,.45],[.61,.46],[.45,.57],[.56,.58],[.42,.72],[.59,.72],[.41,.88],[.61,.88]];
+  }
+
+  const p=pts.map(([x,y])=>[x*w,y*h]);
+
+  [[0,1],[0,2],[1,2],[1,3],[2,4],[1,5],[2,6],[5,6],[5,7],[6,8],[7,9],[8,10]].forEach(([a,b])=>{
+    ctx.beginPath();
+    ctx.moveTo(...p[a]);
+    ctx.lineTo(...p[b]);
+    ctx.stroke();
+  });
+
+  p.forEach(([x,y])=>{
+    ctx.beginPath();
+    ctx.arc(x,y,5,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  showToast(angle+'用の骨格表示デモを重ねました');
+}
+</script>
+
+</body>
+</html>
